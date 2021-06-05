@@ -1,0 +1,34 @@
+#include <stdint.h>
+#include "D:\keil_simulation/tm4c123gh6pm.h"
+
+void SystemInit(){}
+void seven_seg_Init (void)
+{
+SYSCTL_RCGCGPIO_R = 0x02;
+while ((SYSCTL_PRGPIO_R&0X02) == 0){};
+	
+	
+		GPIO_PORTD_LOCK_R = 0x4C4F434B;
+    GPIO_PORTD_CR_R |= 0x0F;
+		GPIO_PORTD_DEN_R |= 0X0F;
+		GPIO_PORTD_DIR_R |= 0X0F;
+		GPIO_PORTD_AMSEL_R &= ~0XFF;
+		GPIO_PORTD_AFSEL_R &= ~0XFF;
+		GPIO_PORTD_PCTL_R &= ~0XFFFFFFFF;
+
+}
+
+
+		int main()
+		{
+			while(1)
+			{
+	seven_seg_Init();
+		
+		GPIO_PORTB_DATA_R |= 0X00;
+				
+				
+		
+			}
+			return 0;
+		}
