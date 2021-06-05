@@ -1,6 +1,6 @@
 #include "stdint.h"
 #include "stdio.h"
-#include "C:\Users\dinaa\Desktop\Embedded Systems CSE211\Labs\tm4c123gh6pm.h"
+#include "C:\Users\tm4c123gh6pm.h"
 void SystemInit(){}
 void PortF_Init(void)
 {
