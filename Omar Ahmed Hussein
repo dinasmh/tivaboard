@@ -1,14 +1,29 @@
+/* this code has been developed by students: Omar Ahmed Hussein, Dina Atef, Omar Abdulmoniem, Nourhan Mahmoud Shafik, Sara Mostafa, Zeina Nabil.
+The code initializes port B,E,F in function led_seg_Init(), calculates the distance in function LedFunc(), 
+and sends dummi data in main() to turn on the 7 segment and the led as shown in the video/photos */
+
+
+
+
+
 #include "stdint.h"
 #include "stdio.h"
+#include <stdlib.h>
 #include "D:\keil_simulation\tm4c123gh6pm.h"
 void SystemInit(){}
 void led_seg_Init(void)
 {
 
-	
-SYSCTL_RCGCGPIO_R = 0x0A;
-while ((SYSCTL_PRGPIO_R&0X0A) == 0){};
-	
+	//init port B,D,F
+SYSCTL_RCGCGPIO_R = 0x2A;
+while ((SYSCTL_PRGPIO_R&0X2A) == 0){};
+	GPIO_PORTF_LOCK_R = 0x4C4F434B;
+    GPIO_PORTF_CR_R |= 0x0F;                      //Using only 4 pins in port F    
+		GPIO_PORTF_DIR_R |= 0X0F;
+		GPIO_PORTF_DEN_R |= 0x0F;
+		GPIO_PORTF_AMSEL_R &= ~0x0F;
+		GPIO_PORTF_AFSEL_R &=~0x0F;
+		GPIO_PORTF_PCTL_R &= ~0xFFFFFFFF;
 	
 		GPIO_PORTB_LOCK_R = 0x4C4F434B;
     GPIO_PORTB_CR_R |= 0xFF;
@@ -41,19 +56,21 @@ PORTD(0TO3) MIDDLE SEVEN
 int start, end, distance;
 
 void LedFunc(start, end){
-	if (end > start){
-		distance = end - start;
+	
+		 distance = abs( end - start);
 		if (distance < 100){
-			GPIO_PORTD_DATA_R = 0X00;
+			GPIO_PORTF_DATA_R = 0X00;
+			GPIO_PORTB_DATA_R |= 0X00; //sevenseg
 		}
 		else{
-			GPIO_PORTD_DATA_R = 0X40; //sevenseg
-			GPIO_PORTB_DATA_R |= 0X10; //turn on RED\sevenseg
+			GPIO_PORTD_DATA_R = 0X00; //middle sevenseg 
+			GPIO_PORTB_DATA_R |= 0X10; //sevenseg
+			GPIO_PORTF_DATA_R = 0X02;
 		}
 	}
 	
 	
-}
+
 		
 int main()
 		{
@@ -61,10 +78,7 @@ int main()
 			led_seg_Init();
 			
 			while(1){
-				//LedFunc(0x55,0x54);
-				LedFunc(0x67,0x100);
-				//GPIO_PORTB_DATA_R |= 0X01;
-		
+				LedFunc(0x67,0x100); //dummy data > 100
 			}
 			return 0;
 		}
