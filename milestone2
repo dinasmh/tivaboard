@@ -24,6 +24,8 @@ double deg2rad(double deg);
 
 void LED_Init(void);
 void LedFunc(double x);
+void seg_Init(void);
+
 
 
 
@@ -47,9 +49,8 @@ int main()
     double N[3] = { 0 };
     double E[3] = { 0 };
     int n = 0;
-    int i, j;
     double d = 0;
-
+    
     UART0_Init();
     UART1_Init();
     while (1) {
@@ -157,15 +158,15 @@ double mintodeg(double x) {
 double distance(double lat1, double lon1, double lat2, double lon2) {
 
     double R = 6371; // Radius of the earth in km
-    double dLat = deg2rad(difference(lat2, lat1));  // deg2rad below
-    double dLon = deg2rad(difference(lon2 , lon1));
+    double dLat = deg2rad(difference(mintodeg(lat2), mintodeg(lat1)));  // deg2rad below
+    double dLon = deg2rad(difference(mintodeg(lon2) , mintodeg(lon1)));
     double a =
         sin(dLat / 2) * sin(dLat / 2) +
         cos(deg2rad(lat1)) * cos(deg2rad(lat2)) *
         sin(dLon / 2) * sin(dLon / 2)
         ;
     double c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    double d = R * c * 1000; // Distance in km
+    double d = R * c *1000; // Distance in m
     return d;
 }
 
@@ -260,10 +261,11 @@ void UART1_Init()
 
 
 
-
-
-
 }
+
+
+
+
 void LedFunc(double x) {
 
     if (x < 25) {
@@ -275,13 +277,6 @@ void LedFunc(double x) {
         GPIO_PORTF_DATA_R = 0X02;
     }
 }
-
-
-
-
-
-
-//gps read func
 
 
 
